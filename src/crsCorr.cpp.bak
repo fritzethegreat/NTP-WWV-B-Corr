@@ -1,0 +1,129 @@
+/*
+ * Performs the heavy lifting for the library
+ *
+ * Modified: 08/18/10
+ * Notes:    --Updating passed series to aliases instead of pointers to
+ *             ensure non-null pointers.
+ *
+ * Modified: 08/17/10
+ * Notes:    --Updated to reflect new changes with templated dataSeries.
+ *
+ * Modified: 07/29/10
+ * Notes:    --Modified function signatures for const
+ *
+ * Modified: 07/16/10
+ * Notes:    --Initial creation
+ */
+
+#include <crsCorr/crsCorr.h>
+#include <iostream>
+
+template<typename DataType>
+const DataSeries<double>* crsCorr::crossCorr(
+        const DataSeries<double>& x,
+        const DataSeries<double>& y )
+{
+  LOG_DEBUG( 0, "( ... )" )
+  LOG_DEBUG( 1, ": Correlating " << x.getLength() << " with " \
+                y.getLength() << " values." )
+
+  if( x == NULL || y == NULL ) {
+    LOG_ERR( "Passed null dataset." )
+    return NULL;
+  } else if( x->getResolution() != y->getResolution() ) {
+    LOG_ERR( "Mismatching resolutions." )
+    return NULL;
+  } else if( x->getStartTime() != y->getStartTime() ) {
+    LOG_ERR( "WARNING: Mismatching start times." )
+  }
+
+  const DataSeries<double>* longSeries;
+  const DataSeries<double>* shortSeries;
+
+  if( x->getLength() > y->getLength() ) {
+    longSeries = x;
+    shortSeries = y;
+  } else {
+    longSeries = y;
+    shortSeries = x;
+  }
+
+  int shortLen = shortSeries->getLength();
+  int longLen = longSeries->getLength();
+  int length = longLen - shortLen + 1;
+  double* result = new double[ length ];
+  const double* const longSeriesData = longSeries->getData();
+  const double* const shortSeriesData = shortSeries->getData();
+  for( int delay = 0; delay < length; delay++ ) {
+    int startTerm = length - delay - 1;
+    for( int index = 0; index < shortLen; index++ ) {
+      result[delay] += shortSeriesData[index]
+                       * longSeriesData[startTerm + index];
+    }
+  }
+
+  DataSeries<double>* resultSeries = new DataSeries<double>( "RESULT" );
+  resultSeries->addValue( result,
+                         shortSeries->getResolution(),
+                         shortSeries->getStartTime() );
+  for( int i = 1; i < length; i++ ) {
+    resultSeries->addValue( result + i );
+  }
+
+  delete[] result;
+  return resultSeries;
+}// end static double* crsCorr::crsCorr( double*, double*, int, int )
+
+template<>
+const DataSeries<int>* crsCorr::crossCorr(
+        const DataSeries<int>& x,
+        const DataSeries<int>& y )
+{
+  LOG_DEBUG( 0, "( ... )" )
+
+  if( x == NULL || y == NULL ) {
+    LOG_ERR( "Passed null dataset." )
+    return NULL;
+  } else if( x->getResolution() != y->getResolution() ) {
+    LOG_ERR( "Mismatching resolutions." )
+    return NULL;
+  } else if( x->getStartTime() != y->getStartTime() ) {
+    LOG_ERR( "WARNING: Mismatching start times." )
+  }
+
+  const DataSeries<int>* longSeries;
+  const DataSeries<int>* shortSeries;
+
+  if( x->getLength() > y->getLength() ) {
+    longSeries = x;
+    shortSeries = y;
+  } else {
+    longSeries = y;
+    shortSeries = x;
+  }
+
+  int shortLen = shortSeries->getLength();
+  int longLen = longSeries->getLength();
+  int length = longLen - shortLen + 1;
+  int* result = new int[ length ];
+  const int* const longSeriesData = longSeries->getData();
+  const int* const shortSeriesData = shortSeries->getData();
+  for( int delay = 0; delay < length; delay++ ) {
+    int startTerm = length - delay - 1;
+    for( int index = 0; index < shortLen; index++ ) {
+      result[delay] += shortSeriesData[index]
+                       * longSeriesData[startTerm + index];
+    }
+  }
+
+  DataSeries<int>* resultSeries = new DataSeries<int>( "RESULT" );
+  resultSeries->addValue( result,
+                         shortSeries->getResolution(),
+                         shortSeries->getStartTime() );
+  for( int i = 1; i < length; i++ ) {
+    resultSeries->addValue( result + i );
+  }
+
+  delete[] result;
+  return resultSeries;
+}// end static double* crsCorr::crsCorr( double*, double*, int, int )

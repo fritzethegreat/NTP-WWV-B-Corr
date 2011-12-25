@@ -1,0 +1,55 @@
+/*
+ * Class which actually performs cross correlations on to provided arrays.
+ *
+ * Future work might involve including the nttw library to perform these
+ *   calculations.
+ *
+ * Modified: 07/29/10
+ * Notes:    --Modified function signatures for const
+ *
+ * Modified: 07/15/10
+ * Notes:    --Initial creation
+ */
+
+#include <crsCorr/global.h>
+#include <crsCorr/dataSeries.h>
+
+#ifndef CRSCORR_CRSCORR_H
+#define CRSCORR_CRSCORR_H
+
+class crsCorr {
+  public:
+    /*
+     * Perform a cross correlation on the two provided arrays using the given
+     *   time delays. Assumes that both of the time series are properly
+     *   oriented forwards in time.
+     *
+     * Calculation is performed by using various portions of the y signal
+     *   and summing the product terms over an interval. A window function
+     *   progresses backwards through the y signal to provide the y terms.
+     *   The result is placed in progressive slots of the result so that
+     *   each index represents the delay term between the two signals.
+     *
+     * Calculation will only be performed if both data sets have matching
+     *   resolutions. Lengths of one data set must be a multiple of the other.
+     *   No wrapping or artificial values, colorings, or flavorings are used.
+     *   The longer of the two signals is assumed to have multiple periods of
+     *   data and will be windowed and delayed according to the size of the
+     *   the other signal.
+     *
+     * Param:
+     *  const DataSeries* -- first data set
+     *  const DataSeries* -- second data set
+     *
+     * Return: New array containing cross correlation. Each index implies
+     *           one unit of delay equal to both DataSeries resolutions.
+     *           If both data series contain five minute data, each delay is
+     *           five minutes.
+     */
+    template<typename DataType>
+    static const DataSeries<DataType>* crossCorr(
+                                       const DataSeries<DataType>& x,
+                                       const DataSeries<DataType>& y );
+};
+
+#endif
