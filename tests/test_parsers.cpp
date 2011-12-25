@@ -65,7 +65,7 @@
 
 //----------------------Testing Vars--------------------------------------------
 
-const string TEST_DATA_PATH = "/usr/local/src/crsCorr_pre-1.1/data/";
+const string TEST_DATA_PATH = "/usr/local/src/NTP-WWV-B-Corr/data/";
 
 const string TEST_DATA_DIR_ACEMAG = "aceMag/";
 const string TEST_DATA_FILE_ACEMAG = "20100813_ace_mag_1m.txt";

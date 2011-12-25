@@ -2,10 +2,28 @@
 | Contents |
 +----------+
 
-  I.  Developer's Notes
-  II. File Parser Labels
+  I.   Developer's Notes
+  II.  Directory Structure
+  III. Tests
+  IV.  File Parser Labels
 
 ---< I. Developer's Notes >-----------------------------------------------------
+
++----------+
+| 12/24/11 |
++----------+
+  Wow. I haven't looked at this code in over a YEAR! Looking back on it, I'm not
+entirely sure I remember what everything does, which naturally makes documenting
+it the first step so that I know what's going on. As I have time, I'll work on 
+uploading various UML diagrams, commented code segments, and the like to have
+a reasonably documented project.  This will also serve to refresh my memory.
+  My goals at this point include finding a radio and antenna that will allow me
+to begin collecting WWV/B data again. This might prove difficult since I am in
+a residential facility instead of a research building. I might not have the
+actual capability or resources to retrieve the signal, but I can hope. After
+that, I basically want to complete this library so that it can do complete
+numerical calculations akin to MATLAB as opposed to just formatting the data
+and pushing it out to MatLab. Then, I want to make pretty graphs! Heehee!
 
 +----------+
 | 09/17/10 |
@@ -29,7 +47,67 @@ normalized cross-correlations, fast fourier transforms, normalized fast-fourier
 transforms, and primitive statisitcs such as mean, standard deviation,
 correlation coefficients, and the time-series data filtering.
 
----< II. File Parser Labels >---------------------------------------------------
+---< II. Directory Structure >--------------------------------------------------
+
++ include/
+  = Header Files
++ src/
+  = Source Files
++ tests/
+  = Test Files
+- Makefile
+  = Should contain everything necessary to build the source and a library,
+    which can be used by other programs
+- README.TXT
+  = This file
+- common.make
+  = Common makefile defs
+
+---< III. Tests >---------------------------------------------------------------
+
+Current as of: 12/24/2011
+
++----------------+
+| testDataSeries |
++----------------+
+
+Test Summary:
+--------------------------------------------------------------------------------
+| Test Name                              |                              Result |
+--------------------------------------------------------------------------------
+ Default Constructor: ..............................................  PASSED  
+ Label Constructor: ................................................  PASSED  
+ Copy Constructor - No Data: .......................................  PASSED  
+ Copy Consturctor - With Data Collect: .............................  PASSED  
+ Copy Consturctor - With Data Final: ...............................  PASSED  
+ Restarted Values: .................................................  PASSED  
+ Add Operator: .....................................................  PASSED  
+ Concatenate Operator: .............................................  PASSED  
+ One Value: ........................................................  PASSED  
+ MultiValues: ......................................................  PASSED  
+ Once Sampled: .....................................................  PASSED  
+ Once Sampled with new Start: ......................................  PASSED  
+ Twice Sampled: ....................................................  PASSED  
+
++-------------+
+| testParsers |
++-------------+
+
+Test Summary:
+--------------------------------------------------------------------------------
+| Test Name                              |                              Result |
+--------------------------------------------------------------------------------
+ Ace Mag Parser: ...................................................    N/A   
+ Ace Swe Parser: ...................................................    N/A   
+ Clockstats Parser: ................................................<<FAILED>>
+ Gp Mag Parser: ....................................................    N/A   
+ Gp Xray Parser: ...................................................    N/A   
+ Gs Mag Parser: ....................................................    N/A   
+ Gs Part Parser: ...................................................    N/A   
+ Gp Part Parser: ...................................................    N/A   
+
+
+---< IV. File Parser Labels >---------------------------------------------------
 
 +--------------+
 | AceMagParser |
